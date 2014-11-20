@@ -19,12 +19,13 @@ public class MAIN extends GraphicsProgram
 	/**Constant Window Size*/
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
+	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 225;
 	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15;
 	int snakeMoveX = 0;
 	int snakeMoveY = 1;
 	
 	/**Creates objects for global access throughout the class*/
-	private GLabel scoringLabel;
+	private GLabel scoringLabel, gameover;
 	private int score;
 	private Snake snake;
 	private Apple apple;
@@ -42,7 +43,7 @@ public class MAIN extends GraphicsProgram
 		addKeyListeners();
 		
 		/** add score label */
-		scoringLabel = new GLabel("Score: 0", (WINDOW_X - SCORE_WIDTH) / 2,(WINDOW_X - SCORE_HEIGHT) / 2);	
+		scoringLabel = new GLabel("Score: 0", (WINDOW_X - SCORE_WIDTH) / 2,(WINDOW_Y - SCORE_HEIGHT) / 2);	
 		scoringLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 75));
 		scoringLabel.setColor(Color.WHITE);
 		add(scoringLabel);
@@ -72,7 +73,7 @@ public class MAIN extends GraphicsProgram
 			pause(20);
 			snake.move(snakeMoveX,snakeMoveY);
 			checkCollision();
-			
+			wallCheck();
 		}
 		
 	}
@@ -123,6 +124,18 @@ public class MAIN extends GraphicsProgram
 		scoringLabel.setLabel("Score: " + score);
 	}
 	
+	/**playerScored method will be called when the butterfly intersects with the net.*/
+	public void playerLost() 
+	{
+		/**increment to score*/
+		score--;
+		
+		/**display new score on screen*/
+		scoringLabel.setLabel("Score: " + score);
+		
+		endGame();
+	}
+	
 	public void buildSnake()
 	{
 		/**Creates new ball with set size passed in from the BALL_SIZE*/
@@ -158,6 +171,44 @@ public class MAIN extends GraphicsProgram
 			apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));	
 			
 		}
+	}
+	
+	public void wallCheck()
+	{
+		/**Checks the ball to see if it has hit the bottom*/
+		if (snake.getY() - snake.getHeight() >= WINDOW_Y)
+		{
+			playerLost();
+		}
+		
+		/**Checks the ball to see if it has hit the top*/
+		if (snake.getY()  <= 0)
+		{
+			playerLost();
+		}
+		
+		/**Checks the ball to keep it in the applet*/
+		if (snake.getX()  <= 0)
+		{
+			playerLost();
+		}
+		
+		/**Checks the ball to keep it in the applet*/
+		if (snake.getX() + snake.getWidth() > WINDOW_X)
+		{
+			playerLost();
+		}
+	}
+	
+	public void endGame()
+	{
+		/** add score label */
+		gameover = new GLabel("Game Over", (WINDOW_X - GAMEOVER_WIDTH) / 2,(WINDOW_Y - GAMEOVER_HEIGHT)/2);	
+		gameover.setFont(new Font("Comic Sans MS", Font.BOLD, 45));
+		gameover.setColor(Color.WHITE);
+		add(gameover);
+		
+		continueGame = false;
 	}
 	
 
