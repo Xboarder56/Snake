@@ -9,7 +9,6 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-
 import acm.graphics.*;
 import acm.program.GraphicsProgram;
 
@@ -19,8 +18,8 @@ public class MAIN extends GraphicsProgram
 	/**Constant Window Size*/
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
-	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 225;
-	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15;
+	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
+	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 40;
 	int snakeMoveX = 0;
 	int snakeMoveY = 1;
 	
@@ -28,6 +27,7 @@ public class MAIN extends GraphicsProgram
 	private GLabel scoringLabel, gameover;
 	private int score;
 	private Snake snake;
+	private Snake enemySnake;
 	private Apple apple;
 	boolean continueGame = true;
 	
@@ -65,6 +65,7 @@ public class MAIN extends GraphicsProgram
 		
 		buildSnake();
 		buildApple();
+		enemyAttack();
 		
 		/**While loop for the game animation*/
 		while(continueGame)
@@ -74,6 +75,7 @@ public class MAIN extends GraphicsProgram
 			snake.move(snakeMoveX,snakeMoveY);
 			checkCollision();
 			wallCheck();
+			//enemySnake.move((int) (Math.random( )*-1.5), (int) (Math.random( )*-1.5));
 		}
 		
 	}
@@ -171,12 +173,18 @@ public class MAIN extends GraphicsProgram
 			apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));	
 			
 		}
+		
+		/**IF i platform intersects with the ball remove the gravity from the ball*/
+		if (snake.getBounds().intersects(enemySnake.getBounds()))
+		{	
+			playerLost();
+		}
 	}
 	
 	public void wallCheck()
 	{
 		/**Checks the ball to see if it has hit the bottom*/
-		if (snake.getY() - snake.getHeight() >= WINDOW_Y)
+		if (snake.getY() >= WINDOW_Y)
 		{
 			playerLost();
 		}
@@ -194,7 +202,7 @@ public class MAIN extends GraphicsProgram
 		}
 		
 		/**Checks the ball to keep it in the applet*/
-		if (snake.getX() + snake.getWidth() > WINDOW_X)
+		if (snake.getX() >= WINDOW_X)
 		{
 			playerLost();
 		}
@@ -211,5 +219,16 @@ public class MAIN extends GraphicsProgram
 		continueGame = false;
 	}
 	
+	public void enemyAttack()
+	{
+		/**Creates new ball with set size passed in from the BALL_SIZE*/
+		enemySnake = new Snake(Color.BLUE, ENEMYSNAKE_SIZE);
+		
+		/**Sets random location for the ball created withn the top half of the window to start*/
+		enemySnake.setLocation((int) (Math.random( )*(WINDOW_X-(ENEMYSNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(ENEMYSNAKE_SIZE))));
+		
+		/**Adds the platforms to the project*/
+		add(enemySnake);
+	}
 
 }
