@@ -9,6 +9,7 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+
 import acm.graphics.*;
 import acm.program.GraphicsProgram;
 
@@ -22,11 +23,12 @@ public class MAIN extends GraphicsProgram
 	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 40;
 	int snakeMoveX = 0;
 	int snakeMoveY = 1;
+	int snakeBodyCount = 3;
 	
 	/**Creates objects for global access throughout the class*/
 	private GLabel scoringLabel, gameover;
 	private int score;
-	private Snake snake;
+	private Snake[] snake;
 	private Snake enemySnake;
 	private Apple apple;
 	boolean continueGame = true;
@@ -72,7 +74,12 @@ public class MAIN extends GraphicsProgram
 		{
 			/**Slows the loop by 20 seconds*/
 			pause(20);
-			snake.move(snakeMoveX,snakeMoveY);
+			/**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
+			for (int i = 0; i < snake.length; i++) 
+			{
+				snake[i].move(snakeMoveX,snakeMoveY);
+	
+			}
 			checkCollision();
 			wallCheck();
 			//enemySnake.move((int) (Math.random( )*-1.5), (int) (Math.random( )*-1.5));
@@ -124,6 +131,9 @@ public class MAIN extends GraphicsProgram
 		
 		/**display new score on screen*/
 		scoringLabel.setLabel("Score: " + score);
+		
+		snakeBodyCount++;
+		buildSnake();
 	}
 	
 	/**playerScored method will be called when the butterfly intersects with the net.*/
@@ -140,14 +150,23 @@ public class MAIN extends GraphicsProgram
 	
 	public void buildSnake()
 	{
-		/**Creates new ball with set size passed in from the BALL_SIZE*/
-		snake = new Snake(Color.GREEN, SNAKE_SIZE);
 		
-		/**Sets random location for the ball created withn the top half of the window to start*/
-		snake.setLocation((int) (Math.random( )*(WINDOW_X-(SNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y/2-(SNAKE_SIZE))));
+		/**builds new platforms based off the number of platforms passed in*/
+		snake = new Snake [snakeBodyCount];
 		
-		/**Adds the platforms to the project*/
-		add(snake);
+		/**Loops the platforms for the amount of platforms passed in (3)*/
+		for (int i = 0; i <  snakeBodyCount; i++) 
+		{
+		
+			/**Creates new ball with set size passed in from the BALL_SIZE*/
+			snake[i] = new Snake(Color.GREEN, SNAKE_SIZE);
+			
+			/**Sets random location for the ball created withn the top half of the window to start*/
+			snake[i].setLocation((int) (Math.random( )*(WINDOW_X-(SNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y/2-(SNAKE_SIZE))));
+			
+			/**Adds the platforms to the project*/
+			add(snake[i]);
+		}
 	}
 	
 	public void buildApple()
@@ -164,45 +183,49 @@ public class MAIN extends GraphicsProgram
 	
 	public void checkCollision()
 	{
-		/**IF i platform intersects with the ball remove the gravity from the ball*/
-		if (snake.getBounds().intersects(apple.getBounds()))
+		/**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
+		for (int i = 0; i < snake.length; i++) 
 		{
-			playerScored();
+			/**IF i platform intersects with the ball remove the gravity from the ball*/
+			if (snake[i].getBounds().intersects(apple.getBounds()))
+			{
+				playerScored();
+				
+				/**Sets random location for the ball created withn the top half of the window to start*/
+				apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));	
+				
+			}
 			
-			/**Sets random location for the ball created withn the top half of the window to start*/
-			apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));	
-			
-		}
-		
-		/**IF i platform intersects with the ball remove the gravity from the ball*/
-		if (snake.getBounds().intersects(enemySnake.getBounds()))
-		{	
-			playerLost();
+			/**IF i platform intersects with the ball remove the gravity from the ball*/
+			if (snake[i].getBounds().intersects(enemySnake.getBounds()))
+			{	
+				playerLost();
+			}
 		}
 	}
 	
 	public void wallCheck()
 	{
 		/**Checks the ball to see if it has hit the bottom*/
-		if (snake.getY() >= WINDOW_Y)
+		if (snake[1].getY() >= WINDOW_Y)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to see if it has hit the top*/
-		if (snake.getY()  <= 0)
+		if (snake[1].getY()  <= 0)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to keep it in the applet*/
-		if (snake.getX()  <= 0)
+		if (snake[1].getX()  <= 0)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to keep it in the applet*/
-		if (snake.getX() >= WINDOW_X)
+		if (snake[1].getX() >= WINDOW_X)
 		{
 			playerLost();
 		}
