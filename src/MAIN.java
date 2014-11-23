@@ -132,6 +132,12 @@ public class MAIN extends GraphicsProgram
 		/**display new score on screen*/
 		scoringLabel.setLabel("Score: " + score);
 		
+		  /**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
+	    for (int i = 0; i < snake.length; i++) 
+	    {
+	        snake[i].removeAll();
+	    }
+		
 		snakeBodyCount++;
 		buildSnake();
 	}
