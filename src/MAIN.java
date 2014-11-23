@@ -23,7 +23,7 @@ public class MAIN extends GraphicsProgram
 	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 40;
 	int snakeMoveX = 0;
 	int snakeMoveY = 1;
-	int snakeBodyCount = 3;
+	int snakeBodyCount = 2;
 	
 	/**Creates objects for global access throughout the class*/
 	private GLabel scoringLabel, gameover;
@@ -67,7 +67,7 @@ public class MAIN extends GraphicsProgram
 		
 		buildSnake();
 		buildApple();
-		enemyAttack();
+		enemyBuild();
 		
 		/**While loop for the game animation*/
 		while(continueGame)
@@ -82,7 +82,7 @@ public class MAIN extends GraphicsProgram
 			}
 			checkCollision();
 			wallCheck();
-			//enemySnake.move((int) (Math.random( )*-1.5), (int) (Math.random( )*-1.5));
+			//enemyAttack();
 		}
 		
 	}
@@ -248,7 +248,7 @@ public class MAIN extends GraphicsProgram
 		continueGame = false;
 	}
 	
-	public void enemyAttack()
+	public void enemyBuild()
 	{
 		/**Creates new ball with set size passed in from the BALL_SIZE*/
 		enemySnake = new Snake(Color.BLUE, ENEMYSNAKE_SIZE);
@@ -258,6 +258,12 @@ public class MAIN extends GraphicsProgram
 		
 		/**Adds the platforms to the project*/
 		add(enemySnake);
+	}
+	
+	public void enemyAttack()
+	{
+		
+		enemySnake.setLocation((int) (Math.random( )*(WINDOW_X-(ENEMYSNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(ENEMYSNAKE_SIZE))));
 	}
 
 }
