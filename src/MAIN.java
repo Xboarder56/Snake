@@ -21,9 +21,10 @@ public class MAIN extends GraphicsProgram
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
 	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
 	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 40;
-	int snakeMoveX = 0;
+	int snakeMoveX = 0; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
 	int snakeMoveY = 1;
-	int snakeBodyCount = 2;
+	int snakeBodyCount = 1;
+	
 	
 	/**Creates objects for global access throughout the class*/
 	private GLabel scoringLabel, gameover;
@@ -45,7 +46,7 @@ public class MAIN extends GraphicsProgram
 		addKeyListeners();
 		
 		/** add score label */
-		scoringLabel = new GLabel("Score: 0", (WINDOW_X - SCORE_WIDTH) / 2,(WINDOW_Y - SCORE_HEIGHT) / 2);	
+		scoringLabel = new GLabel("Level: 0", (WINDOW_X - SCORE_WIDTH) / 2,(WINDOW_Y - SCORE_HEIGHT) / 2);	
 		scoringLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 75));
 		scoringLabel.setColor(Color.WHITE);
 		add(scoringLabel);
@@ -137,7 +138,7 @@ public class MAIN extends GraphicsProgram
 	    {
 	        snake[i].removeAll();
 	    }
-		
+
 		snakeBodyCount++;
 		buildSnake();
 	}
@@ -168,8 +169,8 @@ public class MAIN extends GraphicsProgram
 			snake[i] = new Snake(Color.GREEN, SNAKE_SIZE);
 			
 			/**Sets random location for the ball created withn the top half of the window to start*/
-			snake[i].setLocation((int) (Math.random( )*(WINDOW_X-(SNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y/2-(SNAKE_SIZE))));
-			
+			snake[0].setLocation(WINDOW_X/2,WINDOW_Y/2);
+			snake[i].setLocation(snake[0].getX()+(SNAKE_SIZE*i),snake[0].getY());
 			/**Adds the platforms to the project*/
 			add(snake[i]);
 		}
@@ -213,25 +214,25 @@ public class MAIN extends GraphicsProgram
 	public void wallCheck()
 	{
 		/**Checks the ball to see if it has hit the bottom*/
-		if (snake[1].getY() >= WINDOW_Y)
+		if (snake[0].getY() >= WINDOW_Y)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to see if it has hit the top*/
-		if (snake[1].getY()  <= 0)
+		if (snake[0].getY()  <= 0)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to keep it in the applet*/
-		if (snake[1].getX()  <= 0)
+		if (snake[0].getX()  <= 0)
 		{
 			playerLost();
 		}
 		
 		/**Checks the ball to keep it in the applet*/
-		if (snake[1].getX() >= WINDOW_X)
+		if (snake[0].getX() >= WINDOW_X)
 		{
 			playerLost();
 		}
