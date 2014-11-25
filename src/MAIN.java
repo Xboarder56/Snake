@@ -20,9 +20,9 @@ public class MAIN extends GraphicsProgram
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
 	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
-	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 40;
-	int snakeMoveX = 0; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
-	int snakeMoveY = 1;
+	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 10;
+	int snakeMoveX = 1; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
+	int snakeMoveY = 0;
 	int snakeBodyCount = 1;
 	
 	
@@ -131,7 +131,7 @@ public class MAIN extends GraphicsProgram
 		score++;
 		
 		/**display new score on screen*/
-		scoringLabel.setLabel("Score: " + score);
+		scoringLabel.setLabel("Level: " + score);
 		
 		  /**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
 	    for (int i = 0; i < snake.length; i++) 
@@ -146,11 +146,9 @@ public class MAIN extends GraphicsProgram
 	/**playerScored method will be called when the butterfly intersects with the net.*/
 	public void playerLost() 
 	{
-		/**increment to score*/
-		score--;
 		
 		/**display new score on screen*/
-		scoringLabel.setLabel("Score: " + score);
+		scoringLabel.setLabel("Level: " + score);
 		
 		endGame();
 	}
