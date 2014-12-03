@@ -20,14 +20,14 @@ public class MAIN extends GraphicsProgram
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
 	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
-	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 10;
+	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 12;
 	int snakeMoveX = 1; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
 	int snakeMoveY = 0;
 	int snakeBodyCount = 1;
 	
 	
 	/**Creates objects for global access throughout the class*/
-	private GLabel scoringLabel, gameover;
+	private GLabel scoringLabel, gameover, instructionLabel, instructionLabel2, instructionLabel3;
 	private int score;
 	private Snake[] snake;
 	private Snake enemySnake;
@@ -50,6 +50,8 @@ public class MAIN extends GraphicsProgram
 		scoringLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 75));
 		scoringLabel.setColor(Color.WHITE);
 		add(scoringLabel);
+		
+		instructions();
 	}
 	
 	
@@ -58,14 +60,36 @@ public class MAIN extends GraphicsProgram
 	{
 		/**Stops the applet from running right away until its clicked and then after will animate the applet*/
 		waitForClick();
+		remove(instructionLabel);
+		remove(instructionLabel2);
+		remove(instructionLabel3);
 		animation();
 	}
 	
-	
+	public void instructions()
+	{
+		/**Create the labels with the different instructions*/
+		instructionLabel = new GLabel("Snake, Click in the window to start.", (WINDOW_X - SCORE_WIDTH) / 2,30);
+		instructionLabel2 = new GLabel("Eat the apple to advance to the next level.", (WINDOW_X - SCORE_WIDTH) / 2,60);	
+		instructionLabel3 = new GLabel("Hit the wall and you lose!", (WINDOW_X - SCORE_WIDTH) / 2,90);	
+		
+		/**Add the properties to the current labels*/
+		instructionLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+		instructionLabel.setColor(Color.WHITE);
+		instructionLabel2.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+		instructionLabel2.setColor(Color.WHITE);
+		instructionLabel3.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+		instructionLabel3.setColor(Color.WHITE);
+		
+		/**Addes the instructions to the first screen*/
+		add(instructionLabel);
+		add(instructionLabel2);
+		add(instructionLabel3);
+	}
 	
 	public void animation()
 	{
-		
+		/**Build the methods*/
 		buildSnake();
 		buildApple();
 		enemyBuild();
@@ -75,6 +99,7 @@ public class MAIN extends GraphicsProgram
 		{
 			/**Slows the loop by 20 seconds*/
 			pause(20);
+			
 			/**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
 			for (int i = 0; i < snake.length; i++) 
 			{
@@ -163,10 +188,10 @@ public class MAIN extends GraphicsProgram
 		for (int i = 0; i <  snakeBodyCount; i++) 
 		{
 		
-			/**Creates new ball with set size passed in from the BALL_SIZE*/
+			/**Creates new snake with set size passed in from the snake_SIZE*/
 			snake[i] = new Snake(Color.GREEN, SNAKE_SIZE);
 			
-			/**Sets random location for the ball created withn the top half of the window to start*/
+			/**Sets random location for the snake created withn the top half of the window to start*/
 			snake[0].setLocation(WINDOW_X/2,WINDOW_Y/2);
 			snake[i].setLocation(snake[0].getX()+(SNAKE_SIZE*i),snake[0].getY());
 			/**Adds the platforms to the project*/
@@ -176,10 +201,10 @@ public class MAIN extends GraphicsProgram
 	
 	public void buildApple()
 	{
-		/**Creates new ball with set size passed in from the BALL_SIZE*/
+		/**Creates new snake with set size passed in from the snake_SIZE*/
 		apple = new Apple(Color.RED, APPLE_SIZE);
 		
-		/**Sets random location for the ball created withn the top half of the window to start*/
+		/**Sets random location for the snake created withn the top half of the window to start*/
 		apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));
 		
 		/**Adds the platforms to the project*/
@@ -188,51 +213,56 @@ public class MAIN extends GraphicsProgram
 	
 	public void checkCollision()
 	{
-		/**Loop inside the animation loop to detect how long the platform arry is and loop that many times to create all 3 platforms*/
+		/**Loop inside the animation loop to detect how long the platform array is and loop that many times to create all 3 platforms*/
 		for (int i = 0; i < snake.length; i++) 
 		{
-			/**IF i platform intersects with the ball remove the gravity from the ball*/
+			/**IF i platform intersects with the snake remove the gravity from the snake*/
 			if (snake[i].getBounds().intersects(apple.getBounds()))
 			{
 				playerScored();
 				
-				/**Sets random location for the ball created withn the top half of the window to start*/
+				/**Sets random location for the snake created withn the top half of the window to start*/
 				apple.setLocation((int) (Math.random( )*(WINDOW_X-(APPLE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(APPLE_SIZE))));	
 				
 			}
 			
-			/**IF i platform intersects with the ball remove the gravity from the ball*/
+			/**IF i platform intersects with the snake remove the gravity from the snake*/
 			if (snake[i].getBounds().intersects(enemySnake.getBounds()))
 			{	
 				playerLost();
 			}
+			
 		}
 	}
 	
 	public void wallCheck()
 	{
-		/**Checks the ball to see if it has hit the bottom*/
-		if (snake[0].getY() >= WINDOW_Y)
+		/**Loop inside the animation loop to detect how long the platform array is and loop that many times to create all 3 platforms*/
+		for (int i = 0; i < snake.length; i++) 
 		{
-			playerLost();
-		}
-		
-		/**Checks the ball to see if it has hit the top*/
-		if (snake[0].getY()  <= 0)
-		{
-			playerLost();
-		}
-		
-		/**Checks the ball to keep it in the applet*/
-		if (snake[0].getX()  <= 0)
-		{
-			playerLost();
-		}
-		
-		/**Checks the ball to keep it in the applet*/
-		if (snake[0].getX() >= WINDOW_X)
-		{
-			playerLost();
+			/**Checks the snake to see if it has hit the bottom*/
+			if (snake[i].getY() >= WINDOW_Y)
+			{
+				playerLost();
+			}
+			
+			/**Checks the snake to see if it has hit the top*/
+			if (snake[i].getY()  <= 0)
+			{
+				playerLost();
+			}
+			
+			/**Checks the snake to keep it in the applet*/
+			if (snake[i].getX()  <= 0)
+			{
+				playerLost();
+			}
+			
+			/**Checks the snake to keep it in the applet*/
+			if (snake[i].getX() >= WINDOW_X)
+			{
+				playerLost();
+			}
 		}
 	}
 	
@@ -249,13 +279,13 @@ public class MAIN extends GraphicsProgram
 	
 	public void enemyBuild()
 	{
-		/**Creates new ball with set size passed in from the BALL_SIZE*/
+		/**Creates new  with set size passed in from the snake_SIZE*/
 		enemySnake = new Snake(Color.BLUE, ENEMYSNAKE_SIZE);
 		
-		/**Sets random location for the ball created withn the top half of the window to start*/
+		/**Sets random location for the snake created withn the top half of the window to start*/
 		enemySnake.setLocation((int) (Math.random( )*(WINDOW_X-(ENEMYSNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(ENEMYSNAKE_SIZE))));
 		
-		/**Adds the platforms to the project*/
+		/**Adds the snake to the project*/
 		add(enemySnake);
 	}
 	
