@@ -20,9 +20,10 @@ public class MAIN extends GraphicsProgram
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
 	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
-	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 12;
+	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 30;
 	int snakeMoveX = 1; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
 	int snakeMoveY = 0;
+	int enemysnakeMoveY = 8, enemysnakeMoveX = 10, enemySnakeRand = 10; 
 	int snakeBodyCount = 1;
 	
 	
@@ -108,7 +109,7 @@ public class MAIN extends GraphicsProgram
 			}
 			checkCollision();
 			wallCheck();
-			//enemyAttack();
+			enemyAttack();
 		}
 		
 	}
@@ -291,8 +292,36 @@ public class MAIN extends GraphicsProgram
 	
 	public void enemyAttack()
 	{
+		enemySnake.move(enemysnakeMoveX, enemysnakeMoveY);
+
+		/**Checks the snake to see if it has hit the bottom*/
+		if (enemySnake.getY() + enemySnake.getHeight() >= WINDOW_Y)
+		{
+			 enemysnakeMoveY=(int) (Math.random( )*-enemySnakeRand);
+			enemySnake.move(enemysnakeMoveX, enemysnakeMoveY);
+		}
 		
-		enemySnake.setLocation((int) (Math.random( )*(WINDOW_X-(ENEMYSNAKE_SIZE))), (int) (Math.random( )*(WINDOW_Y-(ENEMYSNAKE_SIZE))));
+		/**Checks the snake to see if it has hit the top*/
+		if (enemySnake.getY()  <= 0)
+		{
+			enemysnakeMoveY=(int) (Math.random( )*enemySnakeRand);
+			enemySnake.move(enemysnakeMoveX,enemysnakeMoveY);
+		}
+		
+		/**Checks the snake to keep it in the applet*/
+		if (enemySnake.getX()  <= 0)
+		{	
+			enemysnakeMoveX=(int) (Math.random( )*enemySnakeRand);
+			enemySnake.move(enemysnakeMoveX, enemysnakeMoveY);
+		}
+		
+		/**Checks the snake to keep it in the applet*/
+		if (enemySnake.getX() + enemySnake.getHeight() >= WINDOW_X)
+		{
+			enemysnakeMoveX=(int) (Math.random( )*-enemySnakeRand);
+			enemySnake.move(enemysnakeMoveX, enemysnakeMoveY);
+		}
+		
 	}
 
 }
