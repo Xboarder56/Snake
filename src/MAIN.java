@@ -20,15 +20,16 @@ public class MAIN extends GraphicsProgram
 	public static final int WINDOW_X = 1000, WINDOW_Y = 1000 ;
 	private static final int SCORE_HEIGHT = 25, SCORE_WIDTH = 350;
 	private static final int GAMEOVER_HEIGHT = -100, GAMEOVER_WIDTH = 275;
-	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 30;
-	int snakeMoveX = 1; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
+	private static final int SNAKE_SIZE = 20, APPLE_SIZE = 15, ENEMYSNAKE_SIZE = 35;
+	int snakeMoveX = 3; int keyMoveSpeedX = 0, keyMoveSpeedY = 0;
 	int snakeMoveY = 0;
+	int setSnakeMove = 3;
 	int enemysnakeMoveY = 8, enemysnakeMoveX = 10, enemySnakeRand = 10; 
 	int snakeBodyCount = 1;
 	
 	
 	/**Creates objects for global access throughout the class*/
-	private GLabel scoringLabel, gameover, instructionLabel, instructionLabel2, instructionLabel3;
+	private GLabel scoringLabel, gameover, instructionLabel, instructionLabel2, instructionLabel3, instructionLabel4;
 	private int score;
 	private Snake[] snake;
 	private Snake enemySnake;
@@ -64,6 +65,7 @@ public class MAIN extends GraphicsProgram
 		remove(instructionLabel);
 		remove(instructionLabel2);
 		remove(instructionLabel3);
+		remove(instructionLabel4);
 		animation();
 	}
 	
@@ -73,6 +75,7 @@ public class MAIN extends GraphicsProgram
 		instructionLabel = new GLabel("Snake, Click in the window to start.", (WINDOW_X - SCORE_WIDTH) / 2,30);
 		instructionLabel2 = new GLabel("Eat the apple to advance to the next level.", (WINDOW_X - SCORE_WIDTH) / 2,60);	
 		instructionLabel3 = new GLabel("Hit the wall and you lose!", (WINDOW_X - SCORE_WIDTH) / 2,90);	
+		instructionLabel4 = new GLabel("Blue enemys attacking you will also lose the game", (WINDOW_X - SCORE_WIDTH) / 2,120);	
 		
 		/**Add the properties to the current labels*/
 		instructionLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
@@ -81,11 +84,14 @@ public class MAIN extends GraphicsProgram
 		instructionLabel2.setColor(Color.WHITE);
 		instructionLabel3.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
 		instructionLabel3.setColor(Color.WHITE);
+		instructionLabel4.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+		instructionLabel4.setColor(Color.WHITE);
 		
 		/**Addes the instructions to the first screen*/
 		add(instructionLabel);
 		add(instructionLabel2);
 		add(instructionLabel3);
+		add(instructionLabel4);
 	}
 	
 	public void animation()
@@ -123,28 +129,28 @@ public class MAIN extends GraphicsProgram
 		/**Checks to see if the key pressed = the up key if it does enter the if statement*/
 		if (event.getKeyCode() == KeyEvent.VK_UP) 
 		{	
-			snakeMoveY = -2;
+			snakeMoveY = -setSnakeMove;
 			snakeMoveX = 0;
 		}
 		
 		/**Checks to see if the key pressed = the down key if it does enter the if statement*/
 		if (event.getKeyCode() == KeyEvent.VK_DOWN) 
 		{
-			snakeMoveY = 2;
+			snakeMoveY = setSnakeMove;
 			snakeMoveX = 0;
 		}
 		
 		/**Checks to see if the key pressed = the down key if it does enter the if statement*/
 		if (event.getKeyCode() == KeyEvent.VK_LEFT) 
 		{
-			snakeMoveX = -2;
+			snakeMoveX = -setSnakeMove;
 			snakeMoveY = 0;
 		}
 		
 		/**Checks to see if the key pressed = the down key if it does enter the if statement*/
 		if (event.getKeyCode() == KeyEvent.VK_RIGHT) 
 		{
-			snakeMoveX = 2;
+			snakeMoveX = setSnakeMove;
 			snakeMoveY = 0;
 		}
 	}
